@@ -31,12 +31,12 @@ public final class CrashCatcher {
 
 fileprivate func exceptionLogHandler(_ exception: NSException)-> Swift.Void {
     Logger.send(Log(.crash, message: "Exception: \(exception)\n\n\(Thread.callStackSymbols.joined(separator: "\n"))\n"))
-    Logger.flushAll()
+    Logger.flush()
 }
 
 fileprivate func signalLogHandler(_ signal: Int32)-> Swift.Void {
     Logger.send(Log(.crash, message: "Signal: \(signal)\n\n\(Thread.callStackSymbols.joined(separator: "\n"))\n"))
-    Logger.flushAll()
+    Logger.flush()
 }
 
 fileprivate func exceptionVoidHandler(_ exception: NSException)-> Swift.Void { /* void */ }

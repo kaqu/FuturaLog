@@ -31,6 +31,8 @@ public final class LogMemoryStorage : LogReciver {
         self.capacity = capacity
         self.storage = []
     }
+    
+    public func flush() {}
 }
 
 extension LogMemoryStorage {
@@ -76,8 +78,6 @@ public final class LogFileStorage : LogReciver {
     private let delimitter: Data
     private let encoding: String.Encoding
     
-    private let formatter: LogFormatter
-    
     public var reader: Reader {
         return Reader(of: self)
     }
@@ -87,8 +87,8 @@ public final class LogFileStorage : LogReciver {
             guard self.allowedCategories.contains(log.category) else {
                 return
             }
-            let logString = self.formatter.format(log)
-            guard var logData = logString.data(using: self.encoding) else {
+
+            guard var logData = try? JSONEncoder().encode(log) else {
                 return
             }
             logData.append(self.delimitter)
@@ -108,13 +108,11 @@ public final class LogFileStorage : LogReciver {
         
         self.delimitter = delimitter
         
-        self.formatter = formatter
-        
         if !FileManager.default.fileExists(atPath: filePath) {
             FileManager.default.createFile(atPath: filePath, contents: Data(), attributes: nil)
         } else { /* nothing */ }
         
-        guard let storage = FileHandle(forWritingAtPath: filePath) else {
+        guard let storage = FileHandle(forUpdatingAtPath: filePath) else {
             return nil
         }
         self.storage = storage
@@ -125,6 +123,10 @@ public final class LogFileStorage : LogReciver {
         case .wipe:
             self.storage.truncateFile(atOffset: 0)
         }
+    }
+    
+    public func flush() {
+        storage.synchronizeFile()
     }
     
     deinit {

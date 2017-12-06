@@ -4,4 +4,6 @@ import XCTest
 
 class FuturaLogTests: XCTestCase {
 
+    func testLogs() {
+    }
 }

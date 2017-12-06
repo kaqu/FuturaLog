@@ -14,13 +14,8 @@ public extension Logger {
     static func send(_ log: Log) {
         recivers.forEach { $0.send(log) }
     }
-}
-
-
-internal extension Logger {
-
-    static func flushAll() {
-        recivers = []
-        sleep(3) // wait for log flush -- TODO: find better way
+    
+    static func flush() {
+        recivers.forEach { $0.flush() }
     }
 }

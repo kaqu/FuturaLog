@@ -22,4 +22,8 @@ public final class LogPrinter : LogReciver {
             self.output("\(self.formatter.format(log))")
         }
     }
+    
+    public func flush() {
+        FileHandle.standardOutput.synchronizeFile()
+    }
 }
