@@ -2,9 +2,9 @@ import Foundation
 
 public final class CrashCatcher {
 
-    public static func enable(_ mode: Mode = .log) {
+    public static func enable(inMode mode: Mode = .logging) {
         switch mode {
-        case .log:
+        case .logging:
             NSSetUncaughtExceptionHandler(exceptionLogHandler);
             signal(SIGABRT, signalLogHandler);
             signal(SIGILL, signalLogHandler);
@@ -12,7 +12,7 @@ public final class CrashCatcher {
             signal(SIGFPE, signalLogHandler);
             signal(SIGBUS, signalLogHandler);
             signal(SIGPIPE, signalLogHandler);
-        case .void:
+        case .hiding:
             NSSetUncaughtExceptionHandler(exceptionVoidHandler);
             signal(SIGABRT, signalVoidHandler);
             signal(SIGILL, signalVoidHandler);
@@ -24,8 +24,8 @@ public final class CrashCatcher {
     }
     
     public enum Mode {
-        case log
-        case void
+        case logging
+        case hiding
     }
 }
 
@@ -37,8 +37,9 @@ fileprivate func exceptionLogHandler(_ exception: NSException)-> Swift.Void {
 fileprivate func signalLogHandler(_ signal: Int32)-> Swift.Void {
     Logger.send(Log(.crash, message: "Signal: \(signal)\n\n\(Thread.callStackSymbols.joined(separator: "\n"))\n"))
     Logger.flush()
+    exit(signal)
 }
 
 fileprivate func exceptionVoidHandler(_ exception: NSException)-> Swift.Void { /* void */ }
 
-fileprivate func signalVoidHandler(_ signal: Int32)-> Swift.Void { /* void */ }
+fileprivate func signalVoidHandler(_ signal: Int32)-> Swift.Void { exit(signal) }

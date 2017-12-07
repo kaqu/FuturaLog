@@ -12,7 +12,7 @@ public extension Logger {
     }
     
     static func send(_ log: Log) {
-        recivers.forEach { $0.send(log) }
+        recivers.forEach { $0.recive(log) }
     }
     
     static func flush() {

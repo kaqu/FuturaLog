@@ -14,7 +14,7 @@ public final class LogPrinter : LogReciver {
         self.output = output
     }
     
-    public func send(_ log: Log) {
+    public func recive(_ log: Log) {
         synchronizationQueue.async {
             guard self.allowedCategories.contains(log.category) else {
                 return
@@ -24,6 +24,8 @@ public final class LogPrinter : LogReciver {
     }
     
     public func flush() {
-        FileHandle.standardOutput.synchronizeFile()
+        synchronizationQueue.sync {
+            FileHandle.standardOutput.synchronizeFile()
+        }
     }
 }

@@ -1,5 +1,6 @@
 import Foundation
 
+// TODO: to refactor - enable more flexible formatting
 public final class LogFormatter {
     
     fileprivate let dateFormatter: DateFormatter = {

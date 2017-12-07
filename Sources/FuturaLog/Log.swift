@@ -10,9 +10,9 @@ public enum LogCategory : UInt8, Codable {
     case verbose = 0b00000100
     case message = 0b00000010
     case info = 0b00000001
-    case void = 0b00000000
+    case void = 0b00000000 // not present in all property since void is special type which is ignored by default
     
-    public static let all: [LogCategory] = [.crash, .special, .error, .warning, .debug, .verbose, .message, .info, .void]
+    public static let all: [LogCategory] = [.crash, .special, .error, .warning, .debug, .verbose, .message, .info]
 }
 
 public struct Log : Codable {
