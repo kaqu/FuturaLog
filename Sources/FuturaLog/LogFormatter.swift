@@ -34,8 +34,6 @@ fileprivate extension LogFormatter {
             return "[DEBUG]"
         case .verbose:
             return "[VERBOSE]"
-        case .message:
-            return "[MESSAGE]"
         case .info:
             return "[INFO]"
         case .void:
