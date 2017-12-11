@@ -10,7 +10,7 @@ public struct LogEnvironment : Codable {
     public let operatingSystemVersion: String?
     public let info: String?
     
-    public init(name: String?, type: String, applicationVersion: String?, platform: String?, operatingSystem: String?, operatingSystemVersion: String?, info: String?) {
+    public init(type: String, name: String? = nil, applicationVersion: String? = nil, platform: String? = nil, operatingSystem: String? = nil, operatingSystemVersion: String? = nil, info: String? = nil) {
         self.name = name
         self.type = type
         self.applicationVersion = applicationVersion

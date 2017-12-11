@@ -1,6 +1,6 @@
 import Foundation
 
-public final class LogMemoryStorage : LogReciver {
+public final class LogMemoryStorage : LogReceiver {
     
     fileprivate let synchronizationQueue = DispatchQueue(label: "futura.log.storage.memory.syncQueue")
     
@@ -15,7 +15,7 @@ public final class LogMemoryStorage : LogReciver {
         self.storage = []
     }
     
-    public func recive(_ log: Log) {
+    public func recieve(_ log: Log) {
         synchronizationQueue.async {
             guard self.allowedCategories.contains(log.category) else {
                 return

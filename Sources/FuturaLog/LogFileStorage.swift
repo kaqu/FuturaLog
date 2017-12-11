@@ -1,7 +1,7 @@
 import Foundation
 
 // TODO: add cycling storage, session separated and date separated modes
-public final class LogFileStorage : LogReciver {
+public final class LogFileStorage : LogReceiver {
     
     fileprivate let synchronizationQueue = DispatchQueue(label: "futura.log.storage.file.syncQueue")
     
@@ -19,7 +19,7 @@ public final class LogFileStorage : LogReciver {
         return Reader(of: self)
     }
     
-    public func recive(_ log: Log) {
+    public func recieve(_ log: Log) {
         synchronizationQueue.async {
             guard self.allowedCategories.contains(log.category) else {
                 return

@@ -2,7 +2,7 @@ import Foundation
 
 public final class Logger {
 
-    fileprivate static var recivers: Array<LogReciver> = []
+    fileprivate static var recievers: Array<LogReceiver> = []
     
     public static let jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
@@ -25,16 +25,16 @@ public final class Logger {
 
 public extension Logger {
     
-    static func addReciver(_ reciver: LogReciver) {
-        recivers.append(reciver)
+    static func addReciever(_ reciever: LogReceiver) {
+        recievers.append(reciever)
     }
     
     static func send(_ log: Log) {
-        recivers.forEach { $0.recive(log) }
+        recievers.forEach { $0.recieve(log) }
     }
     
     static func flush() {
-        recivers.forEach { $0.flush() }
+        recievers.forEach { $0.flush() }
     }
 }
 

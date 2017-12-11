@@ -1,10 +1,10 @@
 import Foundation
 
-public protocol LogReciver {
+public protocol LogReceiver {
     
     var allowedCategories: [LogCategory] { get }
     
-    func recive(_ log: Log)
+    func recieve(_ log: Log)
     func flush()
 }
 

@@ -1,6 +1,6 @@
 import Foundation
 
-public final class LogPrinter : LogReciver {
+public final class LogPrinter : LogReceiver {
 
     public let allowedCategories: [LogCategory]
     
@@ -14,7 +14,7 @@ public final class LogPrinter : LogReciver {
         self.output = output
     }
     
-    public func recive(_ log: Log) {
+    public func recieve(_ log: Log) {
         synchronizationQueue.async {
             guard self.allowedCategories.contains(log.category) else {
                 return

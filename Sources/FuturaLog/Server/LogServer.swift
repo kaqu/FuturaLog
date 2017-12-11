@@ -1,6 +1,6 @@
 import Foundation
 
-public final class LogServer : LogReciver {
+public final class LogServer : LogReceiver {
     
     public let allowedCategories: [LogCategory] = LogCategory.all
     
@@ -27,7 +27,7 @@ public final class LogServer : LogReciver {
         self.environment = environment
     }
     
-    public func recive(_ log: Log) {
+    public func recieve(_ log: Log) {
         synchronizationQueue.async {
             guard self.allowedCategories.contains(log.category) else {
                 return
