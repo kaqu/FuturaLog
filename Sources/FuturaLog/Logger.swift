@@ -3,6 +3,24 @@ import Foundation
 public final class Logger {
 
     fileprivate static var recivers: Array<LogReciver> = []
+    
+    public static let jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        return decoder
+    }()
+    
+    public static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
+        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        return encoder
+    }()
 }
 
 public extension Logger {
