@@ -18,7 +18,7 @@ public final class LogServer : LogReciver {
     
     private let mode: Mode
     
-    init(at serverURL: URL, uploadMode mode: Mode = .continousUpload, application: String, environment: LogEnvironment) {
+    public init(at serverURL: URL, uploadMode mode: Mode = .continousUpload, application: String, environment: LogEnvironment) {
         self.serverURL = serverURL
         self.mode = mode
         self.application = application
