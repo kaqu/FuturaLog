@@ -15,11 +15,13 @@ public final class LogServer : LogReciver {
     private let application: String
     private let environment: LogEnvironment
     private let session: String = UUID().description
+    private let accessToken: String
     
     private let mode: Mode
     
-    public init(at serverURL: URL, uploadMode mode: Mode = .continousUpload, application: String, environment: LogEnvironment) {
+    public init(at serverURL: URL, accessToken: String, uploadMode mode: Mode = .continousUpload, application: String, environment: LogEnvironment) {
         self.serverURL = serverURL
+        self.accessToken = accessToken
         self.mode = mode
         self.application = application
         self.environment = environment
@@ -48,6 +50,8 @@ public final class LogServer : LogReciver {
     private func uploadLogs() {
         var request = URLRequest(url: serverURL.appendingPathComponent("uploadLogs"))
         request.httpBody = try? Logger.jsonEncoder.encode(LogPackage(application: application, environment: environment, session: session, logs: gatheredLogs))
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
         logServerSession.dataTask(with: request).resume()
         gatheredLogs = []
         // TODO: think about logging failure and retry
