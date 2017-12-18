@@ -1,8 +1,10 @@
 import Foundation
 
 public final class Logger {
-
+    
     fileprivate static var recievers: Array<LogReceiver> = []
+    
+    public static let sessionID: String = UUID().description
     
     public static let jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()

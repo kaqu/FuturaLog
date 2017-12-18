@@ -8,22 +8,21 @@ public final class LogServer : LogReceiver {
     
     private let synchronizationQueue = DispatchQueue(label: "futura.log.server.syncQueue")
     
-    private var gatheredLogs: [Log] = []
+    private var logsBuffer: [Log] = []
     
     private let serverURL: URL
     
-    private let application: String
+    private let applicationID: String
     private let environment: LogEnvironment
-    private let session: String = UUID().description
     private let accessToken: String
     
     private let mode: Mode
     
-    public init(at serverURL: URL, accessToken: String, uploadMode mode: Mode = .continousUpload, application: String, environment: LogEnvironment) {
+    public init(at serverURL: URL, accessToken: String, uploadMode mode: Mode = .continousUpload, applicationID: String, environment: LogEnvironment) {
         self.serverURL = serverURL
         self.accessToken = accessToken
         self.mode = mode
-        self.application = application
+        self.applicationID = applicationID
         self.environment = environment
     }
     
@@ -34,10 +33,10 @@ public final class LogServer : LogReceiver {
             }
             switch self.mode {
             case .continousUpload:
-                self.gatheredLogs.append(log)
+                self.logsBuffer.append(log)
             case let .uploadPackages(size):
-                self.gatheredLogs.append(log)
-                guard self.gatheredLogs.count >= size else {
+                self.logsBuffer.append(log)
+                guard self.logsBuffer.count >= size else {
                     return
                 }
 //            case .uploadPeriodically:
@@ -49,11 +48,11 @@ public final class LogServer : LogReceiver {
     
     private func uploadLogs() {
         var request = URLRequest(url: serverURL.appendingPathComponent("uploadLogs"))
-        request.httpBody = try? Logger.jsonEncoder.encode(LogPackage(application: application, environment: environment, session: session, logs: gatheredLogs))
+        request.httpBody = try? Logger.jsonEncoder.encode(LogPackage(applicationID: applicationID, environment: environment, sessionID: Logger.sessionID, logs: logsBuffer))
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
         logServerSession.dataTask(with: request).resume()
-        gatheredLogs = []
+        logsBuffer = []
         // TODO: think about logging failure and retry
     }
     

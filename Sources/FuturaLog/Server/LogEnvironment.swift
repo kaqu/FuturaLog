@@ -2,22 +2,32 @@ import Foundation
 
 public struct LogEnvironment : Codable {
     
-    public let name: String?
-    public let type: String
-    public let applicationVersion: String?
+    public let name: String
+    public let appVersion: String
     public let platform: String?
-    public let operatingSystem: String?
-    public let operatingSystemVersion: String?
+    public let osInfo: String?
     public let info: String?
     
-    public init(type: String, name: String? = nil, applicationVersion: String? = nil, platform: String? = nil, operatingSystem: String? = nil, operatingSystemVersion: String? = nil, info: String? = nil) {
+    public init(name: String, appVersion: String, platform: String? = nil, osInfo: String? = nil, info: String? = nil) {
         self.name = name
-        self.type = type
-        self.applicationVersion = applicationVersion
+        self.appVersion = appVersion
         self.platform = platform
-        self.operatingSystem = operatingSystem
-        self.operatingSystemVersion = operatingSystemVersion
+        self.osInfo = osInfo
         self.info = info
     }
 }
 
+extension LogEnvironment : Hashable {
+    
+    public var hashValue: Int {
+        return "\(self.name)\(self.appVersion)\(self.platform ?? "N/A")\(self.osInfo ?? "N/A")\(self.info ?? "N/A")".hashValue
+    }
+    
+    public static func ==(lhs: LogEnvironment, rhs: LogEnvironment) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.appVersion == rhs.appVersion &&
+            lhs.platform == rhs.platform &&
+            lhs.osInfo == rhs.osInfo &&
+            lhs.info == rhs.info
+    }
+}
