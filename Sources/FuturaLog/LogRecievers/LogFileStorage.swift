@@ -3,6 +3,9 @@ import Foundation
 // TODO: add cycling storage, session separated and date separated modes
 public final class LogFileStorage : LogReceiver {
     
+    public static let jsonDecoder = JSONDecoder()
+    public static let jsonEncoder = JSONEncoder()
+    
     fileprivate let synchronizationQueue = DispatchQueue(label: "futura.log.storage.file.syncQueue")
     
     public let allowedCategories: [LogCategory]
@@ -25,7 +28,7 @@ public final class LogFileStorage : LogReceiver {
                 return
             }
             
-            guard var logData = try? Logger.jsonEncoder.encode(log) else {
+            guard var logData = try? LogFileStorage.jsonEncoder.encode(log) else {
                 return
             }
             logData.append(self.delimitter)
@@ -113,7 +116,7 @@ extension LogFileStorage {
                 if tmpData.count == 0 {
                     
                     if readBuffer.length > 0 {
-                        let log = try? Logger.jsonDecoder.decode(Log.self, from: readBuffer as Data)
+                        let log = try? LogFileStorage.jsonDecoder.decode(Log.self, from: readBuffer as Data)
                         readBuffer.length = 0
                         return log
                     }
@@ -123,7 +126,7 @@ extension LogFileStorage {
                 range = readBuffer.range(of: delimitter, options: [], in: NSMakeRange(0, readBuffer.length))
             }
             
-            let log = try? Logger.jsonDecoder.decode(Log.self, from: readBuffer.subdata(with: NSMakeRange(0, range.location)))
+            let log = try? LogFileStorage.jsonDecoder.decode(Log.self, from: readBuffer.subdata(with: NSMakeRange(0, range.location)))
             readBuffer.replaceBytes(in: NSMakeRange(0, range.location + range.length), withBytes: nil, length: 0)
             
             return log

@@ -1,19 +1,5 @@
 import Foundation
 
-public enum LogCategory : String, Codable {
-    
-    case crash
-    case special
-    case error
-    case warning
-    case debug
-    case verbose
-    case info
-    case void // not present in all property since void is special type which is ignored by default
-    
-    public static let all: [LogCategory] = [.crash, .special, .error, .warning, .debug, .verbose, .info]
-}
-
 public struct Log : Codable {
     
     public let category: LogCategory
@@ -34,4 +20,18 @@ extension Log : ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.init(.debug, message: value)
     }
+}
+
+public enum LogCategory : String, Codable {
+    
+    case crash
+    case special
+    case error
+    case warning
+    case debug
+    case verbose
+    case info
+    case void // not present in `all` property since void is special type which is ignored by default
+    
+    public static let all: [LogCategory] = [.crash, .special, .error, .warning, .debug, .verbose, .info]
 }

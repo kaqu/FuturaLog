@@ -2,6 +2,15 @@ import Foundation
 
 public final class LogServer : LogReceiver {
     
+    public static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
+        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        return encoder
+    }()
+    
     public let allowedCategories: [LogCategory] = LogCategory.all
     
     private let logServerSession: URLSession = URLSession(configuration: URLSessionConfiguration.ephemeral)
@@ -48,7 +57,7 @@ public final class LogServer : LogReceiver {
     
     private func uploadLogs() {
         var request = URLRequest(url: serverURL.appendingPathComponent("uploadLogs"))
-        request.httpBody = try? Logger.jsonEncoder.encode(LogPackage(applicationID: applicationID, environment: environment, sessionID: Logger.sessionID, logs: logsBuffer))
+        request.httpBody = try? LogServer.jsonEncoder.encode(LogPackage(applicationID: applicationID, environment: environment, sessionID: Logger.sessionID, logs: logsBuffer))
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
         logServerSession.dataTask(with: request).resume()

@@ -1,10 +1,3 @@
-//
-//  FlatLog.swift
-//  FuturaLog
-//
-//  Created by Kacper Kaliński on 18/12/2017.
-//
-
 import Foundation
 
 public struct FlatLog : Codable {

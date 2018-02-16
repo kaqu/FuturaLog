@@ -7,4 +7,3 @@ public protocol LogReceiver {
     func recieve(_ log: Log)
     func flush()
 }
-

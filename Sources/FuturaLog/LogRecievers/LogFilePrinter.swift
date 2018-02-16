@@ -4,7 +4,6 @@ public final class LogFilePrinter : LogReceiver {
     
     public let allowedCategories: [LogCategory]
     
-    private let synchronizationQueue = DispatchQueue(label: "futura.log.printer.file.syncQueue")
     private let formatter: LogFormatter
     
     private let filePath: String
@@ -16,17 +15,15 @@ public final class LogFilePrinter : LogReceiver {
     private let encoding: String.Encoding
     
     public func recieve(_ log: Log) {
-        synchronizationQueue.async {
-            guard self.allowedCategories.contains(log.category) else {
-                return
-            }
-            let logString = self.formatter.format(log)
-            guard var logData = logString.data(using: self.encoding) else {
-                return
-            }
-            logData.append(self.delimitter)
-            self.storage.write(logData)
+        guard self.allowedCategories.contains(log.category) else {
+            return
         }
+        let logString = self.formatter.format(log)
+        guard var logData = logString.data(using: self.encoding) else {
+            return
+        }
+        logData.append(self.delimitter)
+        self.storage.write(logData)
     }
     
     public init?(for categories: [LogCategory] = LogCategory.all, with mode: Mode = .append, on filePath: String, formatter: LogFormatter = LogFormatter.default, delimitter: String = "\u{FFFF}\n", encoding: String.Encoding = .utf8) {
@@ -61,9 +58,7 @@ public final class LogFilePrinter : LogReceiver {
     }
     
     public func flush() {
-        synchronizationQueue.sync {
-            storage.synchronizeFile()
-        }
+        storage.synchronizeFile()
     }
 }
 
